@@ -18,10 +18,6 @@ public class Move {
     /**
      * Constructor
      *
-     * @param pcode : HTTP code
-     * @param pmessage
-     * @param pdata
-     * @param pdate
      */
     public Move(int pX, int pY){
 
