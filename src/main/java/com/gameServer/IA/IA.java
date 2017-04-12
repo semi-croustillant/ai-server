@@ -2,16 +2,19 @@ package com.gameServer.IA;/**
  * Created by Guillaume on 11/04/2017.
  */
 
-import com.gameServer.ModelTO.Move;
-import com.gameServer.ModelTO.State;
+import com.gameServer.Contantes.ConstanteRef;
+import com.gameServer.ModelBO.GameBO;
+import com.gameServer.ModelBO.MoveBO;
+import com.gameServer.ModelTO.GameTO;
+
+import java.util.ArrayList;
 
 /**
  * {Insert class description here}
  */
 public class IA {
 
-    private int depth;
-    private State state;
+    private GameBO game;
 
     /**
      * Creates a new instance of MinMax
@@ -19,38 +22,22 @@ public class IA {
     public IA() {
     }
 
-    public IA(State pState, int pDepth){
-       setState(pState);
-       setDepth(pDepth);
+    public IA(GameTO pState){
+       setGame(pState.toBO());
     }
 
 
-    public Move play(){
-
-        return new Move();
+    public MoveBO play(){
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(game);
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(game,moveList);
+        return ServiceIA.max(gameList, ConstanteRef.INITIAL_DEPTH);
     }
 
-    private void next_move(){
-
+    public GameBO getGame() {
+        return game;
     }
 
-    private int getScore(){
-        return 0;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
+    public void setGame(GameBO state) {
+        this.game = state;
     }
 }

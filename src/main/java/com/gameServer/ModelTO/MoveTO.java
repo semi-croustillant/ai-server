@@ -4,22 +4,24 @@ package com.gameServer.ModelTO;
  * Created by Guillaume on 03/01/2017.
  */
 
+import com.gameServer.ModelBO.MoveBO;
+
 /**
  * {Insert class description here}
  */
-public class Move {
+public class MoveTO {
 
     private int x;
     private int y;
 
-    public Move(){
+    public MoveTO(){
     }
 
     /**
      * Constructor
      *
      */
-    public Move(int pX, int pY){
+    public MoveTO(int pX, int pY){
 
     }
 

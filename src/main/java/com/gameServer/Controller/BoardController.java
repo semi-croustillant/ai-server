@@ -1,13 +1,13 @@
 package com.gameServer.Controller;
 
-import com.gameServer.ModelTO.State;
-import com.gameServer.ModelTO.Move;
+import com.gameServer.ModelTO.GameTO;
+import com.gameServer.ModelTO.MoveTO;
 
 /**
  * {Insert class description here}
  */
 public interface BoardController {
 
-    Move sendResponse(State board);
+    MoveTO sendResponse(GameTO board);
 
 }

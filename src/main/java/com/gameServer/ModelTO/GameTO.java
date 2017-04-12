@@ -1,24 +1,24 @@
 package com.gameServer.ModelTO;/**
  * Created by Guillaume on 11/04/2017.
  */
-import java.io.Serializable;
-import java.util.ArrayList;
+
+import com.gameServer.ModelBO.GameBO;
+import com.gameServer.ModelBO.MoveBO;
 
 /**
  * {Insert class description here}
  */
-public class State implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class GameTO {
 
     private int[][] board;
     private int score;
     private int score_vs;
     private int player;
-
+    private int round;
     /**
      * Creates a new instance of State
      */
-    public State() {
+    public GameTO() {
     }
 
     public int[][] getBoard() {
@@ -51,5 +51,17 @@ public class State implements Serializable {
 
     public void setPlayer(int player) {
         this.player = player;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
+    public GameBO toBO(){
+        return new GameBO(getBoard(),getScore(),getScore_vs(),0,new MoveBO(),0);
     }
 }

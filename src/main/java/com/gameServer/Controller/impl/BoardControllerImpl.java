@@ -3,8 +3,10 @@ package com.gameServer.Controller.impl; /**
  */
 
 import com.gameServer.Controller.BoardController;
-import com.gameServer.ModelTO.State;
-import com.gameServer.ModelTO.Move;
+import com.gameServer.IA.IA;
+import com.gameServer.ModelBO.MoveBO;
+import com.gameServer.ModelTO.GameTO;
+import com.gameServer.ModelTO.MoveTO;
 import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,11 +28,11 @@ public class BoardControllerImpl implements BoardController {
             method = RequestMethod.PUT,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Move sendResponse(@RequestBody State board) {
-        LOGGER.debug("It's my turn");
-        int x = 0;
-        int y = 0;
+    public MoveTO sendResponse(@RequestBody GameTO gameInit) {
+        LOGGER.info("It's my turn");
+        IA ia = new IA(gameInit);
+        MoveBO nextMove = ia.play();
 
-        return new Move(x,y);
+        return nextMove.toTO();
     }
 }
