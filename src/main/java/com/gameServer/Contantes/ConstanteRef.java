@@ -7,12 +7,36 @@ import org.apache.log4j.Logger;
 /**
  * {Insert class description here}
  */
-public final class ConstanteRef {
+public class ConstanteRef {
 
-    private static final Logger log = Logger.getLogger(ConstanteRef.class);
     public static final int INITIAL_DEPTH = 1;
     public static final int MAX_DEPTH = 3;
-
-
+    public static final int PLAYER_ONE = 1;
+    public static final int PLAYER_TWO = 2;
     public static final int EMPTY_CASE = 0;
+    private static final Logger log = Logger.getLogger(ConstanteRef.class);
+    private static int idPlayer;
+    private static int idOpponent;
+
+    public ConstanteRef(int pIdPlayer) {
+        setIdPlayer(pIdPlayer);
+        setIdOpponent(pIdPlayer==PLAYER_ONE?PLAYER_TWO:PLAYER_ONE);
+    }
+
+    public static int getIdPlayer() {
+        return idPlayer;
+    }
+
+    public static void setIdPlayer(int idPlayer) {
+        ConstanteRef.idPlayer = idPlayer;
+    }
+
+    public static int getIdOpponent() {
+        return idOpponent;
+    }
+
+    public static void setIdOpponent(int idOpponent) {
+        ConstanteRef.idOpponent = idOpponent;
+    }
 }
+

@@ -43,11 +43,25 @@ public class ServiceIA {
         return null;
     }
 
-    public static MoveBO max(ArrayList<GameBO> gameList, int initialDepth, int player) {
-        return null;
+    public static int max(GameBO gameInit, int initialDepth) {
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdPlayer() );
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit,moveList);
+        for(GameBO game : gameList){
+
+        }
+        return 0;
     }
 
-    public int evaluate(GameBO game) {
+    public static int min(GameBO gameInit, int initialDepth) {
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdOpponent() );
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit,moveList);
+        for(GameBO game : gameList){
+
+        }
+        return 0;
+    }
+
+    public static int evaluate(GameBO game) {
         for(int x=-1; x<1; x++){
             for(int y=-1; y<1; y++){
                 //point immédiat sur l'axe utilisé: (x,y)
@@ -57,5 +71,28 @@ public class ServiceIA {
             }
         }
         return 0;
+    }
+
+    public static MoveBO bestMove(GameBO gameInit, int depth) {
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdPlayer() );
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit, moveList);
+        for(GameBO game : gameList){
+            if(game.getWin() != ConstanteRef.EMPTY_CASE){
+                int weight = ServiceIA.evaluate(game);
+                game.setWeight(weight);
+
+            }else{
+
+                int weight = ServiceIA.min(game, depth);
+                game.setWeight(weight);
+            }
+        }
+        GameBO bestGame = ServiceIA.bestGame(gameList);
+
+        return bestGame.getLastMove();
+    }
+
+    private static GameBO bestGame(ArrayList<GameBO> gameList) {
+        return null;
     }
 }

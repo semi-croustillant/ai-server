@@ -2,6 +2,7 @@ package com.gameServer.Controller.impl; /**
  * Created by Guillaume on 03/01/2017.
  */
 
+import com.gameServer.Contantes.ConstanteRef;
 import com.gameServer.Controller.BoardController;
 import com.gameServer.IA.IA;
 import com.gameServer.ModelBO.MoveBO;
@@ -30,6 +31,9 @@ public class BoardControllerImpl implements BoardController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public MoveTO sendResponse(@RequestBody GameTO gameInit) {
         LOGGER.info("It's my turn");
+        new ConstanteRef(gameInit.getPlayer());
+        LOGGER.info(ConstanteRef.getIdPlayer());
+        LOGGER.info(ConstanteRef.getIdOpponent());
         IA ia = new IA(gameInit);
         MoveBO nextMove = ia.play();
 

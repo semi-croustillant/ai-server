@@ -31,9 +31,8 @@ public class IA {
 
 
     public MoveBO play(){
-        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(game, player );
-        ArrayList<GameBO> gameList = ServiceIA.generateGames(game,moveList);
-        return ServiceIA.max(gameList, ConstanteRef.INITIAL_DEPTH, player);
+
+        return ServiceIA.bestMove(game, ConstanteRef.INITIAL_DEPTH +1);
     }
 
     public GameBO getGame() {

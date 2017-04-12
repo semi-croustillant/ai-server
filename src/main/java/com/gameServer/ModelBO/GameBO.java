@@ -17,20 +17,20 @@ public class GameBO {
      */
     private int[][] grid;
     private int score;
-    private int score_vs;
+    private int scoreVs;
     private int win;
-    private MoveBO last_move;
+    private MoveBO lastMove;
     private int weight;
 
     public GameBO() {
     }
 
-    public GameBO(int[][] grid, int score, int score_vs, int win, MoveBO last_move, int weight) {
+    public GameBO(int[][] grid, int score, int scoreVs, int win, MoveBO lastMove, int weight) {
         this.grid = grid;
         this.score = score;
-        this.score_vs = score_vs;
+        this.scoreVs = scoreVs;
         this.win = win;
-        this.last_move = last_move;
+        this.lastMove = lastMove;
         this.weight = weight;
     }
 
@@ -50,20 +50,28 @@ public class GameBO {
         this.score = score;
     }
 
-    public int getScore_vs() {
-        return score_vs;
+    public int getScoreVs() {
+        return scoreVs;
+    }
+
+    public void setScoreVs(int scoreVs) {
+        this.scoreVs = scoreVs;
     }
 
     public int getWin() {
         return win;
     }
 
-    public MoveBO getLast_move() {
-        return last_move;
+    public void setWin(int win) {
+        this.win = win;
     }
 
-    public void setLast_move(MoveBO last_move) {
-        this.last_move = last_move;
+    public MoveBO getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(MoveBO lastMove) {
+        this.lastMove = lastMove;
     }
 
     public int getWeight() {
@@ -72,13 +80,5 @@ public class GameBO {
 
     public void setWeight(int weight) {
         this.weight = weight;
-    }
-
-    public void setWin(int win) {
-        this.win = win;
-    }
-
-    public void setScore_vs(int score_vs) {
-        this.score_vs = score_vs;
     }
 }
