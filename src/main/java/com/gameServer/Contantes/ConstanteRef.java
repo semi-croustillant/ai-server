@@ -14,6 +14,5 @@ public final class ConstanteRef {
     public static final int MAX_DEPTH = 3;
 
 
-
-
+    public static final int EMPTY_CASE = 0;
 }
