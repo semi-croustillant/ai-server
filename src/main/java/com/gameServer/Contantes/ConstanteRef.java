@@ -11,16 +11,17 @@ public class ConstanteRef {
 
     public static final int INITIAL_DEPTH = 1;
     public static final int MAX_DEPTH = 3;
-    public static final int PLAYER_ONE = 1;
-    public static final int PLAYER_TWO = 2;
     public static final int EMPTY_CASE = 0;
     private static final Logger log = Logger.getLogger(ConstanteRef.class);
+    public static final int VICTORY = 5;
     private static int idPlayer;
     private static int idOpponent;
 
     public ConstanteRef(int pIdPlayer) {
         setIdPlayer(pIdPlayer);
-        setIdOpponent(pIdPlayer==PLAYER_ONE?PLAYER_TWO:PLAYER_ONE);
+        int PLAYER_ONE = 1;
+        int PLAYER_TWO = 2;
+        setIdOpponent(pIdPlayer== PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
     }
 
     public static int getIdPlayer() {
