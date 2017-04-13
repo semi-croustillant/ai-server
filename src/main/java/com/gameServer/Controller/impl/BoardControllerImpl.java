@@ -35,10 +35,7 @@ public class BoardControllerImpl implements BoardController {
         new ConstanteRef(gameInit.getPlayer());
         IA ia = new IA(gameInit);
         MoveBO nextMove = ia.play();
-        GameBO test = gameInit.toBO();
-        GameBO test2 = test.clone();
-        LOGGER.info(test2.toString());
-        //return nextMove.toTO();
+     //return nextMove.toTO();
         return new MoveTO(0,1);
     }
 

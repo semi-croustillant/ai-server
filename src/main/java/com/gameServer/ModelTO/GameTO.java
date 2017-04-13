@@ -62,6 +62,7 @@ public class GameTO {
     }
 
     public GameBO toBO(){
-        return new GameBO(getBoard(),getScore(),getScore_vs(),0,new MoveBO(),0);
+
+        return new GameBO(board,getScore(),getScore_vs(),0,new MoveBO(),0);
     }
 }

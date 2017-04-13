@@ -6,8 +6,10 @@ import com.gameServer.Contantes.ConstanteRef;
 import com.gameServer.ModelBO.GameBO;
 import com.gameServer.ModelBO.MoveBO;
 import com.gameServer.ModelTO.GameTO;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * {Insert class description here}
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 public class IA {
 
     private GameBO game;
-
+    private static final Logger LOGGER = Logger.getLogger(IA.class);
     private int player;
 
     /**
@@ -31,6 +33,7 @@ public class IA {
 
 
     public MoveBO play(){
+
         ArrayList<MoveBO> moveList = ServiceIA.generateMoves(game, ConstanteRef.getIdPlayer() );
         ArrayList<GameBO> gameList = ServiceIA.generateGames(game, moveList);
         for(GameBO gameChild : gameList){
