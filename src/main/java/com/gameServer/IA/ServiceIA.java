@@ -40,7 +40,13 @@ public class ServiceIA {
     }
 
     public static ArrayList<GameBO> generateGames(GameBO game, ArrayList<MoveBO> moveList) {
-        return null;
+        ArrayList<GameBO> gameList = new ArrayList<>();
+        for(MoveBO move : moveList){
+            GameBO childGame = game.clone();
+            childGame.update(move);
+            gameList.add(childGame);
+        }
+        return gameList;
     }
 
     public static int max(GameBO gameInit, int actualDepth) {

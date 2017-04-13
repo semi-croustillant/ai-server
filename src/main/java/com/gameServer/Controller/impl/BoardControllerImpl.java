@@ -5,6 +5,7 @@ package com.gameServer.Controller.impl; /**
 import com.gameServer.Contantes.ConstanteRef;
 import com.gameServer.Controller.BoardController;
 import com.gameServer.IA.IA;
+import com.gameServer.ModelBO.GameBO;
 import com.gameServer.ModelBO.MoveBO;
 import com.gameServer.ModelTO.GameTO;
 import com.gameServer.ModelTO.MoveTO;
@@ -32,11 +33,13 @@ public class BoardControllerImpl implements BoardController {
     public MoveTO sendResponse(@RequestBody GameTO gameInit) {
         LOGGER.info("It's my turn");
         new ConstanteRef(gameInit.getPlayer());
-        LOGGER.info(ConstanteRef.getIdPlayer());
-        LOGGER.info(ConstanteRef.getIdOpponent());
         IA ia = new IA(gameInit);
         MoveBO nextMove = ia.play();
-
-        return nextMove.toTO();
+        GameBO test = gameInit.toBO();
+        GameBO test2 = test.clone();
+        LOGGER.info(test2.toString());
+        //return nextMove.toTO();
+        return new MoveTO(0,1);
     }
+
 }
