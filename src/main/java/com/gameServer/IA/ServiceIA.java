@@ -28,10 +28,10 @@ public class ServiceIA {
         int[][] grid = game.getGrid();
         int size = grid.length;
 
-        for(int x = 0; x < size; x++){
-            for(int y = 0; y < size; y++){
-                if(grid[x][y] == ConstanteRef.EMPTY_CASE){
-                    MoveBO possibleMove = new MoveBO(x,y,player);
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (grid[x][y] == ConstanteRef.EMPTY_CASE) {
+                    MoveBO possibleMove = new MoveBO(x, y, player);
                     moveList.add(possibleMove);
                 }
             }
@@ -43,30 +43,43 @@ public class ServiceIA {
         return null;
     }
 
-    public static int max(GameBO gameInit, int initialDepth) {
-        // TODO: 12/04/17 implement max method
-        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdPlayer() );
-        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit,moveList);
-        for(GameBO game : gameList){
-
+    public static int max(GameBO gameInit, int actualDepth) {
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdPlayer());
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit, moveList);
+        for (GameBO game : gameList) {
+            if (game.getWin() != ConstanteRef.EMPTY_CASE || actualDepth>=ConstanteRef.MAX_DEPTH) {
+                int weight = ServiceIA.evaluate(game);
+                game.setWeight(weight);
+            } else {
+                int weight = ServiceIA.min(game, actualDepth + 1);
+                game.setWeight(weight);
+            }
         }
-        return 0;
+        GameBO bestGame = ServiceIA.bestGame(gameList);
+        return bestGame.getWeight();
     }
 
-    public static int min(GameBO gameInit, int initialDepth) {
-        // TODO: 12/04/17 implement min method
-        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdOpponent() );
-        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit,moveList);
-        for(GameBO game : gameList){
-
+    public static int min(GameBO gameInit, int actualDepth) {
+        ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdOpponent());
+        ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit, moveList);
+        for (GameBO game : gameList) {
+            if (game.getWin() != ConstanteRef.EMPTY_CASE || actualDepth>=ConstanteRef.MAX_DEPTH) {
+                int weight = ServiceIA.evaluate(game);
+                game.setWeight(weight);
+            } else {
+                int weight = ServiceIA.max(game, actualDepth + 1);
+                game.setWeight(weight);
+            }
         }
-        return 0;
+        GameBO worthGame = ServiceIA.worthGame(gameList);
+        return worthGame.getWeight();
     }
+
 
     public static int evaluate(GameBO game) {
         // TODO: 12/04/17 implement evaluate method
-        for(int x=-1; x<1; x++){
-            for(int y=-1; y<1; y++){
+        for (int x = -1; x < 1; x++) {
+            for (int y = -1; y < 1; y++) {
                 //point immédiat sur l'axe utilisé: (x,y)
                 //check sur x,y
                 //check sur 2x, 2y
@@ -77,7 +90,24 @@ public class ServiceIA {
     }
 
     public static GameBO bestGame(ArrayList<GameBO> gameList) {
-        // TODO: 12/04/17 implement bestGame method
-        return null;
+        int maxWeight = ConstanteRef.WEIGHT_MIN;
+        GameBO bestGame = new GameBO();
+        for(GameBO game : gameList){
+            if(game.getWeight()>maxWeight){
+                bestGame = game;
+            }
+        }
+        return bestGame;
+    }
+
+    private static GameBO worthGame(ArrayList<GameBO> gameList) {
+        int minWeight = ConstanteRef.WEIGHT_MAX;
+        GameBO worthGame = new GameBO();
+        for(GameBO game : gameList){
+            if(game.getWeight()<minWeight){
+                worthGame = game;
+            }
+        }
+        return worthGame;
     }
 }

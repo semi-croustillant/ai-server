@@ -14,6 +14,8 @@ public class ConstanteRef {
     public static final int PLAYER_ONE = 1;
     public static final int PLAYER_TWO = 2;
     public static final int EMPTY_CASE = 0;
+    public static final int WEIGHT_MIN = -99999;
+    public static final int WEIGHT_MAX = 99999;
     private static final Logger log = Logger.getLogger(ConstanteRef.class);
     private static int idPlayer;
     private static int idOpponent;
