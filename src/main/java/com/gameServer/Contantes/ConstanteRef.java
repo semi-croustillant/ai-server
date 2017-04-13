@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ConstanteRef {
 
     public static final int INITIAL_DEPTH = 1;
-    public static final int MAX_DEPTH = 3;
+    public static final int MAX_DEPTH = 2;
     public static final int EMPTY_CASE = 0;
     public static final int WEIGHT_MIN = -99999;
     public static final int WEIGHT_MAX = 99999;

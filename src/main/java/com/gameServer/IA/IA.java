@@ -37,8 +37,9 @@ public class IA {
         ArrayList<MoveBO> moveList = ServiceIA.generateMoves(game, ConstanteRef.getIdPlayer() );
         ArrayList<GameBO> gameList = ServiceIA.generateGames(game, moveList);
         for(GameBO gameChild : gameList){
+//            LOGGER.info(" Numero de l'enfant :" + gameList.indexOf(gameChild));
             if(gameChild.getWin() != ConstanteRef.EMPTY_CASE){
-                int weight = ServiceIA.evaluate(gameChild);
+                int weight = ServiceIA.evaluate(gameChild, ConstanteRef.getIdOpponent());
                 gameChild.setWeight(weight);
 
             }else{
@@ -47,8 +48,7 @@ public class IA {
                 gameChild.setWeight(weight);
             }
         }
-        GameBO bestGame = ServiceIA.bestGame(gameList);
-
+        GameBO bestGame = ServiceIA.worstGame(gameList);
         return bestGame.getLastMove();
 
     }

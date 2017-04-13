@@ -22,7 +22,8 @@ public class MoveTO {
      *
      */
     public MoveTO(int pX, int pY){
-
+        setX(pX);
+        setY(pY);
     }
 
 

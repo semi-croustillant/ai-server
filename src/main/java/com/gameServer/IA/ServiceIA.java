@@ -42,8 +42,8 @@ public class ServiceIA {
 
     public static ArrayList<GameBO> generateGames(GameBO game, ArrayList<MoveBO> moveList) {
         ArrayList<GameBO> gameList = new ArrayList<>();
-        for(MoveBO move : moveList){
-            LOGGER.info("Nouvelle partie");
+        for (MoveBO move : moveList) {
+            //LOGGER.info("Nouvelle partie");
             GameBO child = ServiceIA.updateGame(game, move);
             gameList.add(child);
         }
@@ -54,15 +54,22 @@ public class ServiceIA {
         ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdPlayer());
         ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit, moveList);
         for (GameBO game : gameList) {
-            if (game.getWin() != ConstanteRef.EMPTY_CASE || actualDepth>=ConstanteRef.MAX_DEPTH) {
-                int weight = ServiceIA.evaluate(game);
+            if (game.getWin() != ConstanteRef.EMPTY_CASE) {
+                if (game.getWin() == ConstanteRef.getIdPlayer()) {
+                    game.setWeight(ConstanteRef.WEIGHT_MAX);
+                } else {
+                    game.setWeight(ConstanteRef.WEIGHT_MIN);
+                }
+            } else if (actualDepth >= ConstanteRef.MAX_DEPTH) {
+                int weight = ServiceIA.evaluate(game, ConstanteRef.getIdOpponent());
                 game.setWeight(weight);
             } else {
                 int weight = ServiceIA.min(game, actualDepth + 1);
                 game.setWeight(weight);
             }
         }
-        GameBO bestGame = ServiceIA.bestGame(gameList);
+        GameBO bestGame = ServiceIA.worstGame(gameList);
+        //LOGGER.info(bestGame.getWeight());
         return bestGame.getWeight();
     }
 
@@ -70,48 +77,97 @@ public class ServiceIA {
         ArrayList<MoveBO> moveList = ServiceIA.generateMoves(gameInit, ConstanteRef.getIdOpponent());
         ArrayList<GameBO> gameList = ServiceIA.generateGames(gameInit, moveList);
         for (GameBO game : gameList) {
-            if (game.getWin() != ConstanteRef.EMPTY_CASE || actualDepth>=ConstanteRef.MAX_DEPTH) {
-                int weight = ServiceIA.evaluate(game);
+            if (game.getWin() != ConstanteRef.EMPTY_CASE) {
+                if (game.getWin() == ConstanteRef.getIdPlayer()) {
+                    game.setWeight(ConstanteRef.WEIGHT_MAX);
+                } else {
+                    game.setWeight(ConstanteRef.WEIGHT_MIN);
+                }
+            } else if (actualDepth >= ConstanteRef.MAX_DEPTH) {
+                int weight = ServiceIA.evaluate(game, ConstanteRef.getIdPlayer());
                 game.setWeight(weight);
             } else {
                 int weight = ServiceIA.max(game, actualDepth + 1);
                 game.setWeight(weight);
             }
         }
-        GameBO worthGame = ServiceIA.worthGame(gameList);
+
+        GameBO worthGame = ServiceIA.bestGame(gameList);
+        //LOGGER.info(worthGame.getWeight());
         return worthGame.getWeight();
     }
 
 
-    public static int evaluate(GameBO game) {
-        // TODO: 12/04/17 implement evaluate method
-        for (int x = -1; x < 1; x++) {
-            for (int y = -1; y < 1; y++) {
-                //point immédiat sur l'axe utilisé: (x,y)
-                //check sur x,y
-                //check sur 2x, 2y
-                //etc
+    public static int evaluate(GameBO game, int nextPlayer) {
+        int nmbreSerie3 = 0;
+        int nmbreTenailsMaxByMove = 0;
+        int nmbreTenails = 0;
+
+        //nextPlayer == me
+
+        //check noombre tenail
+        for (int x = 0; x < game.getGrid().length; x++) {
+            for (int y = 0; y < game.getGrid().length; y++) {
+
+                int nmbreTenailsByMove = 0;
+                for (int dx = -1; dx < 1; dx++) {
+                    for (int dy = -1; dy < 1; dy++) {
+
+                        //On vérifie que tous les points concernés sont dans la grille
+                        if (neighborInGrid(game.getGrid(), x + 3 * dx, y + 3 * dy)) {
+                            //si la case adjacente appartient au joueur adverse
+                            if (game.getGrid()[x + dx][y + dy] != ConstanteRef.EMPTY_CASE &&
+                                    game.getGrid()[x + dx][y + dy] != nextPlayer) {
+                                    /*On continue dans la meme direction
+                                    Si c'est encore un ennemi*/
+                                if (game.getGrid()[x + 2 * dx][y + 2 * dy] != ConstanteRef.EMPTY_CASE &&
+                                        game.getGrid()[x + 2 * dx][y + 2 * dy] != nextPlayer) {
+
+                                    if (game.getGrid()[x + 3 * dx][y + 3 * dy] == nextPlayer) {
+                                        nmbreTenails = nmbreTenails + 1;
+                                        nmbreTenailsByMove++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (nextPlayer == ConstanteRef.getIdOpponent()) {
+                    if (nmbreTenailsByMove + game.getScoreVs() >= 5) {
+                        return ConstanteRef.WEIGHT_MIN;
+                    }
+                } else {
+                    if (nmbreTenailsByMove + game.getScore() >= 5) {
+                        return ConstanteRef.WEIGHT_MAX;
+                    }
+                }
+
             }
         }
-        return 0;
+        if (nextPlayer == ConstanteRef.getIdPlayer()) {
+            return nmbreTenails + game.getScore();
+        } else {
+            return nmbreTenails + game.getScoreVs();
+        }
+
     }
 
     public static GameBO bestGame(ArrayList<GameBO> gameList) {
         int maxWeight = ConstanteRef.WEIGHT_MIN;
         GameBO bestGame = new GameBO();
-        for(GameBO game : gameList){
-            if(game.getWeight()>maxWeight){
+        for (GameBO game : gameList) {
+            if (game.getWeight() >= maxWeight) {
                 bestGame = game;
             }
         }
         return bestGame;
     }
 
-    private static GameBO worthGame(ArrayList<GameBO> gameList) {
+    public static GameBO worstGame(ArrayList<GameBO> gameList) {
         int minWeight = ConstanteRef.WEIGHT_MAX;
         GameBO worthGame = new GameBO();
-        for(GameBO game : gameList){
-            if(game.getWeight()<minWeight){
+        for (GameBO game : gameList) {
+            if (game.getWeight() <= minWeight) {
                 worthGame = game;
             }
         }
@@ -121,10 +177,12 @@ public class ServiceIA {
     public static GameBO updateGame(final GameBO game, final MoveBO move) {
         int[][] grid = deepCopyIntMatrix(game.getGrid());
 
-        for(int y =0;y<grid.length;y++) {
-            LOGGER.info(grid[0][y]);
-
-        }
+//        for(int y =0;y<grid.length;y++) {
+//            LOGGER.info(grid[0][y]);
+//
+//        }
+        //LOGGER.info("x "+move.getX()+" y " + move.getY());
+        //MoveBO lastMove = game.getLastMove();
         int score = game.getScore();
         int scoreVs = game.getScoreVs();
         int win = game.getWin();
@@ -138,7 +196,7 @@ public class ServiceIA {
         for (int dx = -1; dx < 1; dx++) {
             for (int dy = -1; dy < 1; dy++) {
                 //On vérifie que tous les points concernés sont dans la grille
-                if (neighborInGrid(grid,x + 3 * dx, y + 3 * dy)) {
+                if (neighborInGrid(grid, x + 3 * dx, y + 3 * dy)) {
                     //si la case adjacente appartient au joueur adverse
                     if (grid[x + dx][y + dy] != ConstanteRef.EMPTY_CASE &&
                             grid[x + dx][y + dy] != move.getPlayer()) {
@@ -182,7 +240,7 @@ public class ServiceIA {
 
             for (int i = 1; i < 5; i++) {
                 //pour tous les points avec un dx positif
-                if (neighborInGrid(grid,x + i * dx, y + i * dy)) {
+                if (neighborInGrid(grid, x + i * dx, y + i * dy)) {
                     if ((grid[x + i * dx][y + i * dy] == move.getPlayer())) {
                         stoneAfter++;
                     } else {
@@ -195,21 +253,21 @@ public class ServiceIA {
             }
             for (int i = -1; i > -5; i--) {
                 //pour tous les points avec un dx négatif
-                LOGGER.info("iteration : "+i);
-                LOGGER.info("point d'origine :x="+ (x)+", y="+(y));
-                LOGGER.info(" point etudie  : x="+ (x+i*dx)+", y="+(y+i*dy));
-                LOGGER.info(" point dans grille " + neighborInGrid(grid, x + i * dx, y + i * dy));
+//                LOGGER.info("iteration : "+i);
+//                LOGGER.info("point d'origine :x="+ (x)+", y="+(y));
+//                LOGGER.info(" point etudie  : x="+ (x+i*dx)+", y="+(y+i*dy));
+//                LOGGER.info(" point dans grille " + neighborInGrid(grid, x + i * dx, y + i * dy));
                 if (neighborInGrid(grid, x + i * dx, y + i * dy)) {
-                    LOGGER.info(" voisin : "+grid[x + i * dx][y + i * dy]);
+//                    LOGGER.info(" voisin : "+grid[x + i * dx][y + i * dy]);
                     if ((grid[x + i * dx][y + i * dy] == move.getPlayer())) {
-                        LOGGER.info("Allié trouve");
+//                        LOGGER.info("Allié trouve");
                         stoneAfter++;
                     } else {
-                        LOGGER.info("Allié non trouvé");
+//                        LOGGER.info("Allié non trouvé");
                         break;
                     }
                 } else {
-                    LOGGER.info("En dehors de la grille");
+//                    LOGGER.info("En dehors de la grille");
                     break;
                 }
             }
@@ -217,7 +275,7 @@ public class ServiceIA {
                 win = move.getPlayer();
             }
         }
-        return new GameBO(grid,score,scoreVs,win,move,weigth);
+        return new GameBO(grid, score, scoreVs, win, move, weigth);
     }
 
     private static boolean neighborInGrid(int[][] grid, int neighborX, int neighborY) {

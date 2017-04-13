@@ -11,10 +11,7 @@ import com.gameServer.ModelTO.GameTO;
 import com.gameServer.ModelTO.MoveTO;
 import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controleur Game
@@ -25,8 +22,9 @@ public class BoardControllerImpl implements BoardController {
     private static final Logger LOGGER = Logger.getLogger(BoardControllerImpl.class);
 
     @Override
+    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping(
-            value = "/board",
+            value = "/board/",
             method = RequestMethod.PUT,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -35,8 +33,7 @@ public class BoardControllerImpl implements BoardController {
         new ConstanteRef(gameInit.getPlayer());
         IA ia = new IA(gameInit);
         MoveBO nextMove = ia.play();
-     //return nextMove.toTO();
-        return new MoveTO(0,1);
+        LOGGER.info("x "+ nextMove.getY());
+        return new MoveTO(nextMove.getX(),nextMove.getY());
     }
-
 }
